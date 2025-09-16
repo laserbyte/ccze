@@ -34,7 +34,14 @@ ccze_apm_process (const char *str, int *offsets, int match)
 {
   char *battery, *charge, *rate, *stuff1, *elapsed, *remain;
   char *stuff2;
-  
+
+#if defined(__clang__)
+# pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wcast-qual"
+#elif defined(__GNUC__)
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
   pcre_get_substring (str, offsets, match, 1, (const char **)&battery);
   pcre_get_substring (str, offsets, match, 2, (const char **)&charge);
   pcre_get_substring (str, offsets, match, 4, (const char **)&rate);
@@ -42,6 +49,11 @@ ccze_apm_process (const char *str, int *offsets, int match)
   pcre_get_substring (str, offsets, match, 6, (const char **)&elapsed);
   pcre_get_substring (str, offsets, match, 7, (const char **)&remain);
   pcre_get_substring (str, offsets, match, 8, (const char **)&stuff2);
+#if defined(__clang__)
+# pragma clang diagnostic pop
+#elif defined(__GNUC__)
+# pragma GCC diagnostic pop
+#endif
         
   ccze_addstr (CCZE_COLOR_DEFAULT, "Battery:");
   ccze_space ();
