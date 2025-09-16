@@ -26,6 +26,12 @@
 
 #include <sys/types.h>
 #include <errno.h>
+
+/* Define error_t only on non-GNU systems if it's not provided by headers */
+#ifndef __GLIBC__
+typedef int error_t;
+#define HAVE_CCZE_ERROR_T 1
+#endif
 #include <stddef.h>
 #include <stdio.h>
 
@@ -61,8 +67,7 @@ struct argp_option
 };
 struct argp;
 struct argp_state;
-typedef error_t (*argp_parser_t) (int key, char *arg,
-				  struct argp_state *state);
+typedef error_t (*argp_parser_t)(int key, char *arg, struct argp_state *state);
 #define ARGP_ERR_UNKNOWN        E2BIG
 #define OPTION_HIDDEN		0x2
 struct argp
@@ -88,10 +93,10 @@ extern const char *argp_program_version;
 extern const char *argp_program_bug_address;
 extern const char *argp_program_name;
 
-error_t argp_parse (const struct argp *argps, int argc, char **argv,
-		    unsigned flags, int arg_index, void *input);
-error_t argp_error (const struct argp_state *state, char *fmt, ...)
-     __attribute__ ((noreturn));
+error_t argp_parse(const struct argp *argps, int argc, char **argv,
+          unsigned flags, int arg_index, void *input);
+error_t argp_error(const struct argp_state *state, char *fmt, ...)
+  __attribute__ ((noreturn));
 #endif
 
 #ifndef HAVE_GETLINE
