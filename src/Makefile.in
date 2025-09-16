@@ -12,6 +12,14 @@ include ../Rules.mk
 ## -- Private variables -- ##
 ALL_LDFLAGS	= ${LDFLAGS} ${LIBS}
 
+# On macOS allow unresolved symbols in plugin shared objects to be
+# looked up in the main executable at runtime. This mirrors the
+# runtime behavior needed for plugins on Darwin.
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+ALL_LDFLAGS += -Wl,-undefined,dynamic_lookup
+endif
+
 INCLUDES	= -I. -I${srcdir} -I${top_builddir}
 DEFINES		= -DPATCHLEVEL=\"${PATCHLEVEL}\" -DSYSCONFDIR=\"${sysconfdir}\" \
 		-D_GNU_SOURCE=1 -DPKGLIBDIR=\"${pkglibdir}\" -DHAVE_SYSTEM_H=1 \
